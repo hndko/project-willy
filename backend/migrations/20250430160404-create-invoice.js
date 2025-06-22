@@ -73,6 +73,8 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
+    // Hapus invoice_items DULU, baru invoices
+    await queryInterface.dropTable("Invoice_Items");
     await queryInterface.dropTable("Invoices");
   },
 };

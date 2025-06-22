@@ -58,6 +58,8 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("InvoiceItems");
+    // Biarkan kosong karena sudah di-handle oleh migrasi invoice
+    // atau jika ingin tetap ada, pastikan nama tabel benar
+    await queryInterface.dropTable("Invoice_Items");
   },
 };

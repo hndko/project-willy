@@ -42,6 +42,10 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Customers");
+    // Hapus semua tabel yang bergantung pada 'customers' terlebih dahulu
+    // Dalam kasus ini, kita bisa menghapus 'sales' karena 'sales' butuh 'customers'
+    // Ini adalah cara aman jika urutan undo gagal
+    await queryInterface.dropTable("sales"); // Hapus sales dulu
+    await queryInterface.dropTable("Customers"); // Baru hapus customers
   },
 };

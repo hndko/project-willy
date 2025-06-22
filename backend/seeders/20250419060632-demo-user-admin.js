@@ -6,27 +6,34 @@ const bcrypt = require("bcrypt");
 module.exports = {
   async up(queryInterface, Sequelize) {
     const now = new Date();
-    const salt = await bcrypt.genSaltSync(9); // Membuat password enkripsi
-    // Jadi kita select id didalam table rolesnya, dimana namenya = admin.
+    const salt = bcrypt.genSaltSync(10);
+
+    // Mengambil ID dari role "admin"
     const adminId = await queryInterface.rawSelect(
       "roles",
-      {
-        where: { name: "admin" },
-      },
-      ["id"] // kita bisa mengambil id dari tables rolesnya.
-    ); // Ambil id dari adminnya.
+      { where: { name: "admin" } },
+      ["id"]
+    );
 
-    Example: await queryInterface.bulkInsert(
-      "users", // Kita ambil sesuai dengan nama di dalam colum databasenya
+    // Jika role admin tidak ditemukan, hentikan seeder
+    if (!adminId) {
+      console.log("Admin role not found, skipping admin user seed.");
+      return;
+    }
+
+    // Memasukkan data admin dengan SEMUA kolom yang dibutuhkan
+    await queryInterface.bulkInsert(
+      "Users",
       [
         {
-          id: v4(), // Ambil id dari uuid v4
-          username: "noticescent",
-          name: "admin notice scent",
+          id: v4(),
+          username: "noticescent", // WAJIB ADA: Mengisi kolom username
+          name: "Admin Notice Scent",
           email: "notice@mail.com",
-          phone: "081234347676",
+          phone: "081234567890", // WAJIB ADA: Mengisi kolom phone
           password: bcrypt.hashSync("12345678", salt),
           role_id: adminId,
+          last_login: now, // Diisi null karena user baru belum pernah login
           createdAt: now,
           updatedAt: now,
         },
@@ -36,6 +43,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("users");
+    // Menghapus hanya user yang dibuat oleh seeder ini
+    await queryInterface.bulkDelete("Users", { email: "notice@mail.com" });
   },
 };

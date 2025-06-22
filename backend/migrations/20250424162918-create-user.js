@@ -4,28 +4,15 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Users", {
       id: {
-        allowNull: false,
-        primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
-      },
-      role_id: {
-        type: Sequelize.UUID,
-        references: {
-          model: "Roles",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
+        primaryKey: true,
+        allowNull: false,
       },
       username: {
         type: Sequelize.STRING,
+        allowNull: false,
         unique: true,
-        allowNull: false,
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
       name: {
         type: Sequelize.STRING,
@@ -33,28 +20,40 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING,
-        unique: true,
         allowNull: false,
+        unique: true,
       },
       phone: {
         type: Sequelize.STRING,
+        allowNull: true,
+      },
+      password: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
-      is_active: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true,
+      role_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "roles",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       last_login: {
         type: Sequelize.DATE,
         allowNull: true,
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
     });
   },

@@ -3,34 +3,23 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
-
-    return Promise.all([
-      queryInterface.addColumn("sales", "customer_id", {
-        type: Sequelize.UUID,
-        allowNull: true,
-        after: "user_id",
-        references: {
-          model: "customers",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "SET NULL",
-      }),
-    ]);
+    // Menambahkan kolom customer_id ke tabel sales
+    // dengan referensi ke tabel customers
+    return queryInterface.addColumn("sales", "customer_id", {
+      type: Sequelize.UUID,
+      allowNull: true, // Izinkan null jika customer dihapus
+      after: "user_id", // Posisi kolom (opsional)
+      references: {
+        model: "customers", // Tabel yang dirujuk
+        key: "id",
+      },
+      onUpdate: "CASCADE", // Jika id customer berubah, update di sini
+      onDelete: "SET NULL", // Jika customer dihapus, set kolom ini menjadi NULL
+    });
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
+    // Menghapus kolom customer_id dari tabel sales saat undo
+    return queryInterface.removeColumn("sales", "customer_id");
   },
 };

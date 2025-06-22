@@ -1,35 +1,46 @@
 "use strict";
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Products", {
       id: {
-        allowNull: false,
-        primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
+        primaryKey: true,
+        allowNull: false,
+      },
+      code: {
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false,
       },
       name: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
       },
       category_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
-          model: "Categories",
+          model: "categories",
           key: "id",
         },
-        onDelete: "CASCADE",
         onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      supplier_id: {
-        type: Sequelize.UUID,
-        references: {
-          model: "Suppliers",
-          key: "id",
-        },
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
+      selling_price: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      cost_price: {
+        // Kolom cost_price ditambahkan di sini
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+      },
+      unit: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       description: {
         type: Sequelize.TEXT,
@@ -37,28 +48,18 @@ module.exports = {
       },
       image: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
-      sku: {
-        type: Sequelize.STRING,
+      created_at: {
         allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      price: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
+      updated_at: {
         allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      stock: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
-        allowNull: false,
-      },
-      is_active: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-      },
-      createdAt: Sequelize.DATE,
-      updatedAt: Sequelize.DATE,
     });
   },
   async down(queryInterface, Sequelize) {

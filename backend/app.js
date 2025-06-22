@@ -39,7 +39,11 @@ app.use(cookieParse()); //Cookie Parse
 app.use(morgan("dev")); // Untuk mengecek endpoint yang berjalan di terminal pada postman.
 app.use(
   cors({
-    origin: ["http://localhost:8000", "http://localhost:3000", "http://127.0.0.1:8000"],
+    origin: [
+      "http://localhost:8000",
+      "http://localhost:3000",
+      "http://127.0.0.1:8000",
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -52,6 +56,9 @@ app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 app.use("/invoices", express.static(path.join(__dirname, "public/invoices")));
 
 // Routing API
+app.get("/api", (req, res) => {
+  res.json({ message: "Welcome to the API" });
+});
 app.use("/api/v1/auth", authRouter); // Auth Routing
 app.use("/api/v1/roles", roleRoutes); // Role Routing
 app.use("/api/v1/users", userRouter);
